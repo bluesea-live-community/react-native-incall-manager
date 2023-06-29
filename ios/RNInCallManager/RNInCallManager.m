@@ -1043,6 +1043,12 @@ RCT_EXPORT_METHOD(stopProximitySensor)
 {
     NSString *fileBundle = @"incallmanager_ringback";
     NSString *fileBundleExt = @"mp3";
+    
+    if (![_type isEqualToString:@"_BUNDLE_"]) {
+        fileBundle = _type;
+        _type = @"_BUNDLE_";
+    }
+    
     //NSString *fileSysWithExt = @"vc~ringing.caf"; // --- ringtone of facetime, but can't play it.
     //NSString *fileSysPath = @"/System/Library/Audio/UISounds";
     NSString *fileSysWithExt = @"Marimba.m4r";
@@ -1053,7 +1059,7 @@ RCT_EXPORT_METHOD(stopProximitySensor)
         ? fileSysWithExt
         : _type;
 
-    NSURL *bundleUri = _bundleRingbackUri;
+    NSURL *bundleUri = nil;
     NSURL *defaultUri = _defaultRingbackUri;
 
     NSURL *uri = [self getAudioUri:type
@@ -1064,9 +1070,9 @@ RCT_EXPORT_METHOD(stopProximitySensor)
                          uriBundle:&bundleUri
                         uriDefault:&defaultUri];
 
-    _bundleRingbackUri = bundleUri;
     _defaultRingbackUri = defaultUri;
 
+    NSLog(@"RNInCallManager.getRingbackUri(%@) %@", _type, uri);
     return uri;
 }
 
